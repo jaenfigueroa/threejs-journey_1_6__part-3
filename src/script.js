@@ -1,9 +1,4 @@
 import * as THREE from 'three'
-
-/**
- * Base
- */
-// Canvas
 const canvas = document.querySelector('canvas.webgl')
 
 // Sizes
@@ -12,7 +7,23 @@ const sizes = {
   height: 600,
 }
 
-// Scene
+/* cursor */
+const cursor = {
+  x: 0,
+  y: 0,
+}
+
+canvas.addEventListener('mousemove', (event) => {
+  cursor.x = event.clientX / sizes.width - 0.5
+  cursor.y = -(event.clientY / sizes.height - 0.5)
+
+  // console.log(
+  //   cursor.x,
+  //   cursor.y
+  // )
+})
+
+// 1. Scene
 const scene = new THREE.Scene()
 
 // Axes helper, ejes de coordenadas de ayuda
@@ -26,7 +37,7 @@ const mesh = new THREE.Mesh(
 )
 scene.add(mesh)
 
-// Camera
+// 2. Camera
 const camera = new THREE.PerspectiveCamera(
   45,
   sizes.width / sizes.height,
@@ -34,29 +45,30 @@ const camera = new THREE.PerspectiveCamera(
   100
 )
 
-// const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 100)
+camera.position.z = 3
 
-camera.position.x = 2
-camera.position.y = 2
-camera.position.z = 2
-
-camera.lookAt(mesh.position)
 scene.add(camera)
 
-// Renderer
+// 3. Renderer
 const renderer = new THREE.WebGLRenderer({
   canvas: canvas,
 })
 renderer.setSize(sizes.width, sizes.height)
 
-// Animate
-const clock = new THREE.Clock()
-
 const tick = () => {
-  const elapsedTime = clock.getElapsedTime()
+  // 1er. TIPO
+  // camera.position.x = cursor.x * 4
+  // camera.position.y = cursor.y * 4
 
-  // Update objects
-  mesh.rotation.y = elapsedTime
+  // 2do. TIPO
+  camera.position.x = Math.sin(cursor.x * Math.PI * 2) * 3
+  camera.position.z = Math.cos(cursor.x * Math.PI * 2) * 3
+
+  camera.position.y = cursor.y * 5
+
+  // 3er. TIPO
+
+  camera.lookAt(mesh.position)
 
   // Render
   renderer.render(scene, camera)
